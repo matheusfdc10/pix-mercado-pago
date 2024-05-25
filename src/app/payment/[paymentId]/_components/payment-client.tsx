@@ -1,9 +1,12 @@
 "use client"
 
+import { useSocket } from "@/hooks/use-socket";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 interface PaymentClientProps {
+    id?: number;
     qr_code?: string;
     qr_code_base64?: string;
     ticket_url?: string;
@@ -16,6 +19,7 @@ interface PaymentClientProps {
 }
 
 const PaymentClient = ({
+    id,
     status,
     transaction_amount,
     description,
@@ -26,6 +30,14 @@ const PaymentClient = ({
     date_created,
     date_of_expiratio
 }: PaymentClientProps) => {
+    // const [statuss, setStatuss] = useState<string>()
+
+    const { data } = useSocket<string>({
+        key: `teste:${id}`,
+        // action: (data: string) => setStatuss(data)
+    })
+
+    const statusPayment = data || status;
     
     return (
         <div className="border shadow-sm max-w-[577px] w-full bg-white rounded-md">
@@ -76,6 +88,12 @@ const PaymentClient = ({
                 </span>
                 <span>
                     {status}
+                </span>
+                <span>
+                    Data status: {data}
+                </span>
+                <span>
+                    statusPayment: {statusPayment}
                 </span>
             </div>
         </div>
