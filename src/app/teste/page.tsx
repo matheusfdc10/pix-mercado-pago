@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { payment1, payment2, getPayment } from "@/actions/payment";
-import { useTeste } from "@/hooks/use-teste";
 
 import { io } from "socket.io-client";
+import Image from "next/image";
 
 interface PaymentProps {
     params: {
@@ -118,7 +118,7 @@ const PaymentPage = ({
       <div>
         {JSON.stringify(dataPayment)}
         {dataPayment &&
-          <img src={`data:image/png;base64, ${dataPayment.point_of_interaction.transaction_data.qr_code_base64}`} width={200} alt="" />
+          <Image src={`data:image/png;base64, ${dataPayment.point_of_interaction.transaction_data.qr_code_base64}`} width={200} height={200} alt="" />
         }
       </div>
     </main>

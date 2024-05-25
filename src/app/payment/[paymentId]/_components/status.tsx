@@ -2,7 +2,6 @@
 
 import { useSocket } from "@/hooks/use-socket";
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 
 interface StatusProps {
     statusPayment?: string;
@@ -13,18 +12,18 @@ const Status = ({
     paymentId,
     statusPayment
 }: StatusProps) => {
-    const [status, setStatus] = useState<string>();
+    // const [status, setStatus] = useState<string>();
 
-    const { data } = useSocket<string>({
-        key: `teste:${paymentId}`,
-        action: (data: string) => setStatus(data)
-    })
+    // const { data } = useSocket<string>({
+    //     key: `teste:${paymentId}`,
+    //     action: (data: string) => setStatus(data)
+    // })
 
-    useEffect(() => {
-        setStatus(statusPayment);
-    }, [])
+    // useEffect(() => {
+    //     setStatus(statusPayment);
+    // }, [])
 
-
+    // TESTE
     // useEffect(() => {
     //     // if (!socket) {
     //     //   return
@@ -54,7 +53,7 @@ const Status = ({
 
     return (
         <div>
-            <h1>{status}</h1>
+            {/* <h1>{status}</h1> */}
         </div>
     );
 }
