@@ -2,7 +2,7 @@
 
 import { getStatusPayment } from "@/actions/payment";
 import { Button } from "@/components/ui/button";
-import { ToastAction } from "@/components/ui/toast";
+import { ToastAction,  } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { useSocket } from "@/hooks/use-socket";
 import { formatDate, formatNumber } from "@/lib/utils";
@@ -10,7 +10,7 @@ import { CopyIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface PaymentClientProps {
     id?: number;
@@ -65,7 +65,7 @@ const PaymentClient = ({
             switch(payment?.status) {
                 case "pending":
                     toast({
-                        title: "Pagamento não recebido",
+                        title: "Pagamento pendente",
                         variant: "default",
                     })
                     setDisabled(false)
@@ -74,10 +74,8 @@ const PaymentClient = ({
                     toast({
                         title: "Pagamento concluído!",
                         variant: "success",
+                        action: <Countdown onFinish={() => router.push(`/payment/${payment.id}/status`)} />
                     })
-                    setTimeout(() => {
-                        router.push(`/payment/${payment.id}/success`)
-                    }, 3000);
                 break;
                 case "cancelled":
                     toast({
@@ -116,7 +114,7 @@ const PaymentClient = ({
                 </h1>
             </div>
             <div className="border-t" />
-            <div className="flex flex-col space-y-8 px-4 py-8">
+            <div className="flex flex-col space-y-8 px-6 py-8">
                 <div className=" flex flex-col space-y-4">
                     {name_payment && (
                         <span className="text-lg font-semibold capitalize">
@@ -192,3 +190,32 @@ const PaymentClient = ({
 }
  
 export default PaymentClient;
+
+
+
+
+
+interface CountdownProps {
+    onFinish: () => void;
+}
+
+const Countdown: React.FC<CountdownProps> = ({ onFinish }) => {
+    const [countdown, setCountdown] = useState<number>(3);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCountdown((prevCountdown) => {
+                if (prevCountdown === 0) {
+                    clearInterval(timer);
+                    onFinish();
+                    return prevCountdown;
+                }
+                return prevCountdown - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [onFinish]);
+
+    return <div className="text-white text-2xl absolute right-8" >{countdown || ""}</div>;
+};

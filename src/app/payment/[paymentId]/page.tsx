@@ -17,8 +17,8 @@ const PaymentPage = async ({
         redirect(`/`)
     }
 
-    if (payment.status === "approved") {
-        redirect(`/payment/${payment.id}/success`)
+    if (payment.status !== "pending") {
+        redirect(`/payment/${payment.id}/status`)
     }
 
     return (

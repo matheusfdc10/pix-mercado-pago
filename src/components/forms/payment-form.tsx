@@ -16,7 +16,9 @@ const formSchema = z.object({
     email: z.string().email({
         message: "Email inválido"
     }),
-    transaction_amount: z.coerce.number().min(0.01, {
+    transaction_amount: z.coerce.number({
+        message: "Valor inválido"
+    }).min(0.01, {
         message: "Preencha o valor"
     }),
     description: z.string().optional(),
@@ -30,7 +32,7 @@ const PaymentForm = () => {
         defaultValues: {
           first_name: "",
           email: "",
-          transaction_amount: 0,
+          transaction_amount: undefined,
           description: undefined,
         },
     })
@@ -40,21 +42,13 @@ const PaymentForm = () => {
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         try {
             const response = await axios.post(`api/payment`, values)
+            
             if (response.status === 200 || response.status === 201) {
                 const data = response.data as PaymentResponse;
                 router.push(`/payment/${data.id}`);
             }
-            // toast({
-            //     description: toastMessage,
-            // });
-            // router.back();
-
         } catch(error) {
             console.log(error)
-            // toast({
-            //     variant: "destructive",
-            //     description: "Algo deu errado.",
-            // });
         }
     }
 
