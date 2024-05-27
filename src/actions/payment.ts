@@ -186,6 +186,35 @@ export const getPayment = async (id: string) => {
     
 }
 
+export const getStatusPayment = async (id: number) => {
+    try {
+        const codigo = randomUUID();
+        
+        const client = new MercadoPagoConfig(
+            { 
+                accessToken: process.env.ACCESS_TOKEN!, 
+                options: { timeout: 5000, idempotencyKey: codigo } 
+            }
+        );
+
+        const payment = new Payment(client);
+
+        const response = await payment.get({id})
+
+        if (!response.id) {
+            return null
+        }
+        // console.log(response)
+        return {
+            id: response.id,
+            status: response.status,
+        }
+    } catch(error) {
+        console.log(error)
+        return null
+    }
+    
+}
 
 
 
