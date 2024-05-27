@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { payment1, payment2, getPayment } from "@/actions/payment";
+import { getPayment } from "@/actions/payment";
 
 import { io } from "socket.io-client";
 import Image from "next/image";
@@ -20,23 +20,23 @@ const PaymentPage = ({
   const [value, setValue] = useState<number>(0);
     console.log(params.paymentId)
   const pagamento = () => {
-    payment2({
-      description: "Compra dos numeros (43, 76, 87, 34, 07)",
-      email: "matheusfdc10@hotmail.com",
-      notification_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/socket/notification`,
-      numberIdentification: 17633759780,
-      typeIdentification: 'CPF',
-      transaction_amount: value,
-      reference: "M0001"
-    })
-      .then((response) => {
-        console.log(response);
-        setDataPayment(response)
-        setStatus(response.status)
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // payment2({
+    //   description: "Compra dos numeros (43, 76, 87, 34, 07)",
+    //   email: "matheusfdc10@hotmail.com",
+    //   notification_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/socket/notification`,
+    //   numberIdentification: 1232132131,
+    //   typeIdentification: 'CPF',
+    //   transaction_amount: value,
+    //   reference: "M0001"
+    // })
+    //   .then((response) => {
+    //     console.log(response);
+    //     setDataPayment(response)
+    //     setStatus(response.status)
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   }
 
   const verificarPagamento = () => {
