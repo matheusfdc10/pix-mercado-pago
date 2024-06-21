@@ -72,7 +72,7 @@ const PaymentClient = ({
 
         // return webhook
         socket.on(`paymentStatus:${id}`, ({ paymentId, status }) => {
-            // console.log(`Received status for payment ${paymentId}: ${status}`);
+            console.log(`Received status for payment ${paymentId}: ${status}`);
             setStatuss(status);
         });
         
