@@ -57,7 +57,7 @@ const PaymentClient = ({
     };
 
     useEffect(() => {
-        if (!socket) return
+        if (!socket.connected) return
 
         socket.on("connect", () => {
             console.log('connect')

@@ -21,6 +21,8 @@ const notificationHandler = async (req: NextApiRequest, res: NextApiResponseServ
                     const paymentId = id
                     const status = response.status
 
+                    res.status(200).json({ message: response.status });
+
                     const socket = io(url, {
                         transports: ["websocket"],
                     });
@@ -38,11 +40,6 @@ const notificationHandler = async (req: NextApiRequest, res: NextApiResponseServ
                         res.status(500).json({ message: 'Failed to connect to WebSocket server' });
                     });
 
-                    await new Promise<void>((resolve: any) => {
-                        socket.on('disconnect', resolve);
-                    });
-
-                    res.status(200).json({ message: response.status });
                     // socket.emit('updatePaymentStatus', { paymentId, status })
                     // res.status(200).json({ message: response.status });
                 } else {
