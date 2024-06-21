@@ -63,19 +63,26 @@ const PaymentClient = ({
             console.log('connect')
         });
 
-        socket.emit('joinPaymentRoom', id);
+        const paymentId = id
 
-        // verification api
-        socket.on(`paymentStatus`, ({ paymentId, status }) => {
-            console.log(`Received status for payment ${paymentId}: ${status}`);
-            setStatuss(status);
-        });
+        socket.on(`paymentStatus:${id}`, (status) => {
+            console.log(status)
+            setStatuss(status)
+        })
 
-        // return webhook
-        socket.on(`paymentStatus:${id}`, ({ paymentId, status }) => {
-            console.log(`Received status for payment ${paymentId}: ${status}`);
-            setStatuss(status);
-        });
+        // socket.emit('joinPaymentRoom', id);
+
+        // // verification api
+        // socket.on(`paymentStatus`, ({ paymentId, status }) => {
+        //     console.log(`Received status for payment ${paymentId}: ${status}`);
+        //     setStatuss(status);
+        // });
+
+        // // return webhook
+        // socket.on(`paymentStatus:${id}`, ({ paymentId, status }) => {
+        //     console.log(`Received status for payment ${paymentId}: ${status}`);
+        //     setStatuss(status);
+        // });
         
 
         socket.on("disconnect", () => {

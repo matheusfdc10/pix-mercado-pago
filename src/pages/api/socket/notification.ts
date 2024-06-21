@@ -17,26 +17,28 @@ const notificationHandler = async (req: NextApiRequest, res: NextApiResponseServ
                 const response = await getPayment(id as string)
                 
                 if (response) {
-                    // const socket = connectWebSocket()
+                    const socket = connectWebSocket()
                     const paymentId = id
                     const status = response.status
 
-                    const socket = io(url, {
-                        transports: ["websocket"],
-                    });
+                    // const socket = io(url, {
+                    //     transports: ["websocket"],
+                    // });
 
-                    socket.on('connect', async () => {
-                        console.log('Connected to WebSocket server');
-                        await socket.emitWithAck('updatePaymentStatus', { paymentId, status });
-                        socket.disconnect();
-                        res.status(200).json({ message: response.status });
-                    })
+                    socket.emit('updatePaymentStatus', { paymentId, status })
 
-                    socket.on('connect_error', (error) => {
-                        console.error('Connection error:', error);
-                        res.status(500).json({ message: 'Failed to connect to WebSocket server' });
-                    });
+                    res.status(200).json({ message: response.status });
+                    // socket.on('connect', () => {
+                    //     console.log('Connected to WebSocket server');
+                    //     socket.emit('updatePaymentStatus', { paymentId, status });
+                    //     socket.disconnect();
+                    //     res.status(200).json({ message: response.status });
+                    // })
 
+                    // socket.on('connect_error', (error) => {
+                    //     console.error('Connection error:', error);
+                    //     res.status(500).json({ message: 'Failed to connect to WebSocket server' });
+                    //   });
 
                     // socket.emit('updatePaymentStatus', { paymentId, status })
                     // res.status(200).json({ message: response.status });
