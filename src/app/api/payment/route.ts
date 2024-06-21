@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     const paymentData: PaymentRequest = {
         body: {
-            // notification_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/socket/notification`,
+            notification_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/socket/notification`,
             additional_info: {
                 payer: {
                     first_name: first_name,

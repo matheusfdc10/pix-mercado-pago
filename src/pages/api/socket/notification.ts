@@ -1,6 +1,8 @@
 import { NextApiRequest } from "next";
 import { NextApiResponseServerIo } from "@/types";
 import { getPayment } from "@/actions/payment";
+import { connectWebSocket } from "@/socket-server";
+
 
 const notificationHandler = async (req: NextApiRequest, res: NextApiResponseServerIo) => {
     if (req.method === "POST") {
@@ -10,13 +12,16 @@ const notificationHandler = async (req: NextApiRequest, res: NextApiResponseServ
         if (id) {
             try {
                 const response = await getPayment(id as string)
-                console.log("STATUS:", response?.status)
+                
+                if (response) {
+                    const socket = connectWebSocket()
+                    const paymentId = id
+                    const status = response.status
 
-                if (res.socket.server.io) {
-                    res.socket.server.io.emit(`teste:${id}`, response?.status);
-                    res.status(200).json({ message: response?.status });
+                    socket.emit('updatePaymentStatus', { paymentId, status })
+                    res.status(200).json({ message: response.status });
                 } else {
-                    res.status(500).json({ message: "Socket.io server not initialized" });
+                    res.status(500).json({ message: "Payment null" });
                 }
             } catch(error) {
                 res.status(405).json({ message: "Method not allowed" });
@@ -24,6 +29,26 @@ const notificationHandler = async (req: NextApiRequest, res: NextApiResponseServ
         } else {
             res.status(405).json({ message: "Method not allowed" });
         }
+
+
+
+        // if (id) {
+        //     try {
+        //         const response = await getPayment(id as string)
+        //         console.log("STATUS:", response?.status)
+
+        //         if (res.socket.server.io) {
+        //             res.socket.server.io.emit(`teste:${id}`, response?.status);
+        //             res.status(200).json({ message: response?.status });
+        //         } else {
+        //             res.status(500).json({ message: "Socket.io server not initialized" });
+        //         }
+        //     } catch(error) {
+        //         res.status(405).json({ message: "Method not allowed" });
+        //     }
+        // } else {
+        //     res.status(405).json({ message: "Method not allowed" });
+        // }
     }
 };
 

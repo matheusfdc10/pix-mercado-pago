@@ -6,11 +6,13 @@ import { ToastAction,  } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { useSocket } from "@/hooks/use-socket";
 import { formatDate, formatNumber } from "@/lib/utils";
+import { socket } from "@/socket-client";
 import { CopyIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
 
 interface PaymentClientProps {
     id?: number;
@@ -38,6 +40,7 @@ const PaymentClient = ({
     date_of_expiration
 }: PaymentClientProps) => {
     const [disabled, setDisabled] = useState(false)
+    const [statuss, setStatuss] = useState<string | undefined>(status)
     const { toast } = useToast()
     const router = useRouter()
     // const [statuss, setStatuss] = useState<string>()
@@ -48,6 +51,42 @@ const PaymentClient = ({
     // })
 
     // const statusPayment = statusRealTime || status;
+
+    const sendMessage = () => {
+        // socket.emit('messages', { id, message });
+    };
+
+    useEffect(() => {
+
+        socket.on("connect", () => {
+            console.log('connect')
+        });
+
+        socket.emit('joinPaymentRoom', id);
+
+        // verification api
+        socket.on(`paymentStatus`, ({ paymentId, status }) => {
+            console.log(`Received status for payment ${paymentId}: ${status}`);
+            setStatuss(status);
+        });
+
+        // return webhook
+        socket.on(`paymentStatus:${id}`, ({ paymentId, status }) => {
+            // console.log(`Received status for payment ${paymentId}: ${status}`);
+            setStatuss(status);
+        });
+        
+
+        socket.on("disconnect", () => {
+            console.log('disconnect')
+        });
+
+        return () => {
+            socket.off(`paymentStatus:${id}`)
+            socket.off('paymentStatus');
+            socket.off('disconnect');
+        };
+    }, [id])
 
     const onCopy = () => {
         navigator.clipboard.writeText(qr_code!);
@@ -105,6 +144,17 @@ const PaymentClient = ({
             setDisabled(false)
         }
     }
+
+
+    useEffect(() => {
+        if (statuss === 'approved') {
+            toast({
+                title: "Pagamento concluído!",
+                variant: "success",
+                action: <Countdown onFinish={() => router.push(`/payment/${id}/status`)} />
+            })
+        }
+    } ,[statuss])
     
     return (
         <div className="border shadow-sm max-w-[577px] w-full bg-white rounded-md">
@@ -178,6 +228,9 @@ const PaymentClient = ({
                 {/* <span>
                     Status: {statusPayment}
                 </span> */}
+                <span className="text-center text-black/60">
+                    {statuss}
+                </span>
                 <Button
                     onClick={checkPayment}
                     disabled={disabled}
