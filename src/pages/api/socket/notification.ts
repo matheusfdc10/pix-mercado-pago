@@ -23,7 +23,7 @@ const notificationHandler = async (req: NextApiRequest, res: NextApiResponseServ
 
                     const socket = io(url, {
                         transports: ["websocket"],
-                        autoConnect: false,
+                        // autoConnect: false,
                     });
 
                     socket.on('connect', () => {
