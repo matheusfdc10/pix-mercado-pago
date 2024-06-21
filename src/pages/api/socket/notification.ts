@@ -29,8 +29,8 @@ const notificationHandler = async (req: NextApiRequest, res: NextApiResponseServ
                     socket.on('connect', () => {
                         console.log('Connected to WebSocket server');
                         socket.emit('updatePaymentStatus', { paymentId, status });
-                        res.status(200).json({ message: response.status });
                         socket.disconnect();
+                        res.status(200).json({ message: response.status });
                     })
 
                     socket.on('connect_error', (error) => {
