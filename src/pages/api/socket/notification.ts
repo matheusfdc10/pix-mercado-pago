@@ -23,21 +23,20 @@ const notificationHandler = async (req: NextApiRequest, res: NextApiResponseServ
 
                     const socket = io(url, {
                         transports: ["websocket"],
-                        // autoConnect: false,
                     });
 
                     socket.on('connect', () => {
                         console.log('Connected to WebSocket server');
                         socket.emit('updatePaymentStatus', { paymentId, status });
                         socket.disconnect();
-                        res.status(200).json({ message: response.status });
                     })
 
                     socket.on('connect_error', (error) => {
                         console.error('Connection error:', error);
                         res.status(500).json({ message: 'Failed to connect to WebSocket server' });
-                      });
+                    });
 
+                    res.status(200).json({ message: response.status });
                     // socket.emit('updatePaymentStatus', { paymentId, status })
                     // res.status(200).json({ message: response.status });
                 } else {
