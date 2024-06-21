@@ -25,9 +25,10 @@ const notificationHandler = async (req: NextApiRequest, res: NextApiResponseServ
                     //     transports: ["websocket"],
                     // });
 
-                    socket.emit('updatePaymentStatus', { paymentId, status })
-
+                    await socket.emitWithAck('updatePaymentStatus', status, paymentId )
+                    socket.disconnect()
                     res.status(200).json({ message: response.status });
+
                     // socket.on('connect', () => {
                     //     console.log('Connected to WebSocket server');
                     //     socket.emit('updatePaymentStatus', { paymentId, status });
