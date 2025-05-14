@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation"
 import axios from "axios"
 import { PaymentResponse } from "@/types"
 import { Textarea } from "@/components/ui/textarea"
+import { LoaderCircleIcon } from "lucide-react"
 
 const formSchema = z.object({
     first_name: z.string().optional(),
@@ -134,7 +135,7 @@ const PaymentForm = () => {
                     type="submit"
                     disabled={isLoading}
                 >
-                    Continuar
+                    {isLoading ? <LoaderCircleIcon className="animate-spin"/> : "Continuar"} 
                 </Button>
             </form>
         </Form>

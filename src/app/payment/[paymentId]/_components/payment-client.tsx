@@ -162,7 +162,7 @@ const PaymentClient = ({
                 action: <Countdown onFinish={() => router.push(`/payment/${id}/status`)} />
             })
         }
-    } ,[statuss])
+    } ,[id, router, statuss, toast])
     
     return (
         <div className="border shadow-sm max-w-[577px] w-full bg-white rounded-md">
